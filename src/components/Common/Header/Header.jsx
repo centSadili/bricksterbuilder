@@ -52,19 +52,19 @@ export default function Header() {
                     <a href="/" className="text-gray-600 hover:text-blue-600">
                         Home
                     </a>
-                    <a href="/features" className="text-gray-600 hover:text-blue-600">
+                    <a href="/discover" className="text-gray-600 hover:text-blue-600">
                         Discover
                     </a>
-                    <a href="/pricing" className="text-gray-600 hover:text-blue-600">
+                    <a href="/trending" className="text-gray-600 hover:text-blue-600">
                         Trending
                     </a>
-                    <a href="/contact" className="text-gray-600 hover:text-blue-600">
+                    <a href="/universe" className="text-gray-600 hover:text-blue-600">
                         Universe
                     </a>
                     <a href="/contact" className="text-gray-600 hover:text-blue-600">
                         Contact
                     </a>
-                    <a href="/contact" className="text-gray-600 hover:text-blue-600">
+                    <a href="/help" className="text-gray-600 hover:text-blue-600">
                         Help
                     </a>
                 </nav>
@@ -86,22 +86,22 @@ export default function Header() {
                             </a>
                         </li>
                         <li>
-                            <a href="/features" className="block text-gray-600 hover:text-blue-600">
+                            <a href="/discover" className="block text-gray-600 hover:text-blue-600">
                                 Discover
                             </a>
                         </li>
                         <li>
-                            <a href="/pricing" className="block text-gray-600 hover:text-blue-600">
+                            <a href="/trending" className="block text-gray-600 hover:text-blue-600">
                                 Trending
                             </a>
                         </li>
                         <li>
-                            <a href="/contact" className="block text-gray-600 hover:text-blue-600">
+                            <a href="/universe" className="block text-gray-600 hover:text-blue-600">
                                 Universe
                             </a>
                         </li>
                         <li>
-                            <a href="/contact" className="block text-gray-600 hover:text-blue-600">
+                            <a href="/help" className="block text-gray-600 hover:text-blue-600">
                                 Help
                             </a>
                         </li>
