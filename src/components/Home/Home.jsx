@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import * as galleryService from "../../services/galleryService";
 import PageView from "../Common/PageView/PageView";
 
 const Home = () => {
@@ -31,11 +32,8 @@ const Home = () => {
       setLoadingSets(true);
       setSetsError(null);
       try {
-        const res = await axios.get(`${apiBaseUrl}/sets/`, {
-          params: { page_size: 10, ordering: "-year" },
-          headers: { Authorization: `key ${apiKey}` },
-        });
-        setSets(res.data.results || []);
+        const results = await galleryService.fetchRebrickableSets(apiKey, apiBaseUrl, 10);
+        setSets(results || []);
       } catch (err) {
         setSetsError(err?.message || "Failed to fetch sets");
       } finally {
@@ -71,7 +69,7 @@ const Home = () => {
             </a>
           </div>
 
-          <div className="mt-6 grid grid-cols-3 gap-4">
+          {/* <div className="mt-6 grid grid-cols-3 gap-4">
             {features.map((f, i) => (
               <div key={i} className="flex flex-col items-start gap-2 bg-white/80 p-3 rounded-lg shadow-sm">
                 <div className="text-2xl">{f.icon}</div>
@@ -79,11 +77,11 @@ const Home = () => {
                 <div className="text-xs text-gray-600">{f.desc}</div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
 
         <div className="flex-1">
-          <div className="w-full rounded-lg">
+          <div className="w-full">
             <img
               src="https://th.bing.com/th/id/R.d6465632cd4352f092717b8a7dbc75f6?rik=%2fvqGGQAigA182w&pid=ImgRaw&r=0"
               alt="Colorful build preview"
@@ -106,25 +104,33 @@ const Home = () => {
         {loadingSets && <div className="mb-3 text-sm">Loading sets...</div>}
         {setsError && <div className="mb-3 text-sm text-red-700">Error: {setsError}</div>}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          {(
-            // Use fetched sets when available, otherwise fallback to static images
-            sets.length ? sets : galleryImages.map((url) => ({ set_img_url: url, name: "Fallback" }))
-          ).map((item, index) => {
-            const imgSrc = item.set_img_url || item.img_url || item.image_url || item.image || "";
-            const title = item.name || item.set_num || `Item ${index + 1}`;
-            return (
-              <div key={index} className="rounded-md overflow-hidden bg-white relative pb-[75%]">
-                <img
-                  src={imgSrc}
-                  alt={title}
-                  className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-300"
-                  loading="lazy"
-                />
-              </div>
-            );
-          })}
-        </div>
+        {(() => {
+          const itemsWithImages = galleryService.normalizeAndFilterGalleryItems(sets, galleryImages);
+
+          if (!itemsWithImages.length) {
+            return <div className="text-sm text-gray-600">No images available to display.</div>;
+          }
+
+          return (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              {itemsWithImages.map((item, index) => (
+                <div key={index} className="rounded-md overflow-hidden bg-white relative pb-[75%] flex items-center justify-center">
+                  <img
+                    src={item.imgSrc}
+                    alt={item.title}
+                    title={item.title}
+                    className="absolute inset-0 m-auto max-w-full max-h-full object-contain transition-transform duration-300 hover:scale-105"
+                    loading="lazy"
+                    onError={(e) => {
+                      // Hide image element if it fails to load
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          );
+        })()}
       </section>
 
       {/* Secondary Promo */}
