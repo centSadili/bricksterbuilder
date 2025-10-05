@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Footer() {
   return (
-    <footer className=" bg-white text-black border-t-4 border-oklch(96.7% 0.003 264.542)">
+    <footer className=" bg-white text-black border-t-4 border-gray-200">
       <div className="container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
         
         {/* Brand / About */}
