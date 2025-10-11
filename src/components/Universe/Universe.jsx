@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PageView from "../Common/PageView/PageView";
-import galleryService from "../../services/galleryService";
+import * as galleryService from "../../services/galleryService";
 
 const Universe = () => {
   const [sets, setSets] = useState([]);

@@ -11,7 +11,7 @@ const PageView = ({ children, title, showFooter, className }) => {
       </header>
 
       {/* Main Content (padding top accounts for fixed header) */}
-      <main className="flex-grow container mx-auto px-4 pt-24 pb-20">
+      <main className="flex-grow px-4 pt-24 pb-20">
         {title && <h1 className="sr-only">{title}</h1>}
         {children}
       </main>

@@ -9,9 +9,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/discover" element={<Discover />} />
+        {/* <Route path="/discover" element={<Discover />} />
         <Route path="/trending" element={<Trending />} />
-        <Route path="/universe" element={<Universe />} />
+        <Route path="/universe" element={<Universe />} /> */}
       </Routes>
      
     </Router>
