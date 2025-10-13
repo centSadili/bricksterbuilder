@@ -2,6 +2,19 @@ import axios from "axios";
 const apiKey = import.meta.env.VITE_REBRICKABLE_API_KEY;
 const baseUrl = import.meta.env.VITE_REBRICKABLE_API_BASE_URL;
 
+const getLegoLists = (listType,page) => {
+  return axios
+    .get(`${baseUrl}/lego/${listType}/`,
+      { params: { key: apiKey, page: page } }
+    )
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error(`Error fetching LEGO ${listType}:`, err);
+      throw err;
+    }
+    );
+}
+
 const getLegoset = (setNum) => {
   return axios
     .get(`${baseUrl}/lego/sets/${setNum}`,
@@ -39,6 +52,7 @@ const getParts = (setNum) => {
 }
 
 export {
+  getLegoLists,
   getLegoset,
   getMinifig,
   getParts

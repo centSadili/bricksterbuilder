@@ -10,146 +10,19 @@ const Home = () => {
   const [activeCategory, setActiveCategory] = useState("sets"); // New state for active category
   const [currentSlide, setCurrentSlide] = useState(0); // Carousel state
   const [isAutoPlaying, setIsAutoPlaying] = useState(true); // Auto-play state
-
-  // Sample set numbers to display in the gallery
-  const featuredSetNumbers = [
-    "76391-1", // Hogwarts Icons
-    "10300-1", // Back to the Future Time Machine
-    "76405-1", // Hogwarts Express
-    "21348-1", // Dungeons & Dragons
-    "10497-1", // Galaxy Explorer
-    "76393-1", // Harry Potter & Hermione Granger
-  ];
-
-  // Sample minifig numbers
-  const featuredMinifigNumbers = [
-    "fig-000001", // Generic minifig
-    "fig-000002", // Generic minifig
-    "fig-000003", // Generic minifig
-    "fig-000004", // Generic minifig
-    "fig-000005", // Generic minifig
-    "fig-000006", // Generic minifig
-  ];
-
-  // Fallback gallery images for when API is not available
-  const galleryImages = {
-    sets: [
-      {
-        title: "LEGO Hogwarts Icons",
-        imgSrc: "https://images.brickset.com/sets/large/76391-1.jpg",
-      },
-      {
-        title: "Back to the Future Time Machine",
-        imgSrc: "https://images.brickset.com/sets/large/10300-1.jpg",
-      },
-      {
-        title: "Hogwarts Express",
-        imgSrc: "https://images.brickset.com/sets/large/76405-1.jpg",
-      },
-      {
-        title: "Dungeons & Dragons",
-        imgSrc: "https://images.brickset.com/sets/large/21348-1.jpg",
-      },
-      {
-        title: "Galaxy Explorer",
-        imgSrc: "https://images.brickset.com/sets/large/10497-1.jpg",
-      },
-    ],
-    minifigs: [
-      {
-        title: "Harry Potter",
-        imgSrc: "https://img.bricklink.com/ItemImage/MN/0/hp001.png",
-      },
-      {
-        title: "Hermione Granger",
-        imgSrc: "https://img.bricklink.com/ItemImage/MN/0/hp002.png",
-      },
-      {
-        title: "Batman",
-        imgSrc: "https://img.bricklink.com/ItemImage/MN/0/bat001.png",
-      },
-      {
-        title: "Luke Skywalker",
-        imgSrc: "https://img.bricklink.com/ItemImage/MN/0/sw001.png",
-      },
-    ],
-    parts: [
-      {
-        title: "2x4 Brick Red",
-        imgSrc: "https://img.bricklink.com/ItemImage/PN/5/3001.png",
-      },
-      {
-        title: "1x1 Brick White",
-        imgSrc: "https://img.bricklink.com/ItemImage/PN/1/3005.png",
-      },
-      {
-        title: "2x2 Plate Blue",
-        imgSrc: "https://img.bricklink.com/ItemImage/PN/7/3022.png",
-      },
-      {
-        title: "Slope 1x2",
-        imgSrc: "https://img.bricklink.com/ItemImage/PN/11/3040.png",
-      },
-    ],
-  };
-
   useEffect(() => {
-    const fetchFeaturedItems = async () => {
-      // Only fetch if API key is available
-      if (!import.meta.env.VITE_REBRICKABLE_API_KEY) {
-        setSets(galleryImages[activeCategory]);
-        return;
-      }
 
-      setLoadingSets(true);
-      setSetsError(null);
-
+    const fetchedListItems = async () => {
       try {
-        let itemPromises = [];
-
-        if (activeCategory === "sets") {
-          itemPromises = featuredSetNumbers.map((setNum) =>
-            galleryService.getLegoset(setNum)
-          );
-        } else if (activeCategory === "minifigs") {
-          itemPromises = featuredMinifigNumbers.map((figNum) =>
-            galleryService.getMinifig(figNum)
-          );
-        } else if (activeCategory === "parts") {
-          // For parts, we'll use the first set to get its parts
-          try {
-            const partsData = await galleryService.getParts(
-              featuredSetNumbers[0]
-            );
-            setSets(partsData.results || []);
-            setLoadingSets(false);
-            return;
-          } catch (error) {
-            console.error("Error fetching parts:", error);
-            setSets(galleryImages.parts);
-            setLoadingSets(false);
-            return;
-          }
-        }
-
-        const fetchedItems = await Promise.allSettled(itemPromises);
-
-        const validItems = fetchedItems
-          .filter((result) => result.status === "fulfilled")
-          .map((result) => result.value);
-
-        setSets(validItems);
+        const data = await galleryService.getLegoLists(activeCategory,10);
+        setSets(data.results || []);
+        console.log("Fetched list items:", data.results);
       } catch (error) {
-        console.error(`Error fetching featured ${activeCategory}:`, error);
-        setSetsError(`Failed to load featured ${activeCategory}`);
-        // Fall back to static gallery
-        setSets(galleryImages[activeCategory]);
-      } finally {
-        setLoadingSets(false);
+        console.error("Error fetching LEGO lists:", error);
       }
     };
 
-    fetchFeaturedItems();
+    fetchedListItems();
   }, [activeCategory]); // Re-fetch when category changes
 
   // Function to normalize gallery items for display
@@ -188,6 +61,16 @@ const Home = () => {
           imgSrc: item.imgSrc,
         };
       }
+    }).filter((item) => {
+      // Filter out items without valid images
+      return (
+        item.imgSrc && 
+        item.imgSrc.trim() !== '' && 
+        !item.imgSrc.includes('placeholder') &&
+        !item.imgSrc.includes('via.placeholder') &&
+        item.imgSrc !== 'null' &&
+        item.imgSrc !== 'undefined'
+      );
     });
   };
 
@@ -197,7 +80,7 @@ const Home = () => {
   };
 
   // Carousel navigation functions
-  const itemsPerSlide = 4; // Number of items to show per slide
+  const itemsPerSlide = 5; // Number of items to show per slide
 
   const nextSlide = () => {
     const normalizedItems = normalizeGalleryItems(sets);
@@ -324,7 +207,7 @@ const Home = () => {
                     : "bg-white/80 hover:bg-white text-gray-700 hover:shadow-md"
                 }`}
               >
-                🏗️ Sets
+                Sets
               </button>
               <button
                 onClick={() => handleCategoryChange("minifigs")}
@@ -334,7 +217,7 @@ const Home = () => {
                     : "bg-white/80 hover:bg-white text-gray-700 hover:shadow-md"
                 }`}
               >
-                👤 Minifigs
+                Minifigs
               </button>
               <button
                 onClick={() => handleCategoryChange("parts")}
@@ -344,7 +227,7 @@ const Home = () => {
                     : "bg-white/80 hover:bg-white text-gray-700 hover:shadow-md"
                 }`}
               >
-                🔧 Parts
+                Parts
               </button>
             </div>
           </div>
