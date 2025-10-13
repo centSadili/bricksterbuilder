@@ -10,11 +10,12 @@ const Home = () => {
   const [activeCategory, setActiveCategory] = useState("sets"); // New state for active category
   const [currentSlide, setCurrentSlide] = useState(0); // Carousel state
   const [isAutoPlaying, setIsAutoPlaying] = useState(true); // Auto-play state
+  
   useEffect(() => {
 
     const fetchedListItems = async () => {
       try {
-        const data = await galleryService.getLegoLists(activeCategory,10);
+        const data = await galleryService.getLegoLists(activeCategory,1);
         setSets(data.results || []);
         console.log("Fetched list items:", data.results);
       } catch (error) {
