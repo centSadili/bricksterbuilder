@@ -4,7 +4,6 @@ const baseUrl = import.meta.env.VITE_REBRICKABLE_API_BASE_URL;
 
 const normalizeGalleryItems = (items, failedImages = new Set()) => {
   if (!items || items.length === 0) return [];
-
   return items
     .map((item) => {
       // For API data - sets
