@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PageView from "../Common/PageView/PageView";
+import LegoCard from "../Common/Cards/LegoCard";
 import * as galleryService from "../../services/galleryService";
 
 const Home = () => {
@@ -10,7 +11,8 @@ const Home = () => {
   const [activeCategory, setActiveCategory] = useState("sets"); // New state for active category
   const [currentSlide, setCurrentSlide] = useState(0); // Carousel state
   const [isAutoPlaying, setIsAutoPlaying] = useState(true); // Auto-play state
-  
+  const [failedImages, setFailedImages] = useState(new Set()); // Track failed images
+
   useEffect(() => {
 
     const fetchedListItems = async () => {
@@ -63,14 +65,15 @@ const Home = () => {
         };
       }
     }).filter((item) => {
-      // Filter out items without valid images
+      // Filter out items without valid images or that have failed to load
       return (
         item.imgSrc && 
         item.imgSrc.trim() !== '' && 
         !item.imgSrc.includes('placeholder') &&
         !item.imgSrc.includes('via.placeholder') &&
         item.imgSrc !== 'null' &&
-        item.imgSrc !== 'undefined'
+        item.imgSrc !== 'undefined' &&
+        !failedImages.has(item.imgSrc) // Exclude failed images
       );
     });
   };
@@ -78,6 +81,23 @@ const Home = () => {
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
     setCurrentSlide(0); // Reset carousel when category changes
+  };
+
+  // Function to handle image load errors
+  const handleImageError = (imgSrc) => {
+    setFailedImages(prev => new Set([...prev, imgSrc]));
+  };
+
+  // Handle view details click
+  const handleViewDetails = (item) => {
+    console.log('View details for:', item);
+    // Add navigation logic here
+  };
+
+  // Handle favorite click
+  const handleFavorite = (item) => {
+    console.log('Favorite clicked for:', item);
+    // Add favorite logic here
   };
 
   // Carousel navigation functions
@@ -244,23 +264,10 @@ const Home = () => {
                   <div className="overflow-hidden rounded-xl">
                     <div className="flex gap-6 py-6">
                       {Array.from({ length: itemsPerSlide }, (_, index) => (
-                        <div
+                        <LegoCard
                           key={`skeleton-${index}`}
-                          className="flex-none w-60 bg-white rounded-xl shadow-lg p-4 border border-gray-100 animate-pulse"
-                        >
-                          {/* Image skeleton */}
-                          <div className="w-full h-48 rounded-lg bg-gray-200"></div>
-                          
-                          {/* Content skeleton */}
-                          <div className="mt-3 space-y-3">
-                            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                            <div className="flex items-center justify-between mt-2">
-                              <div className="h-6 bg-gray-200 rounded-full w-20"></div>
-                              <div className="h-4 w-4 bg-gray-200 rounded"></div>
-                            </div>
-                          </div>
-                        </div>
+                          isLoading={true}
+                        />
                       ))}
                     </div>
                   </div>
@@ -308,48 +315,14 @@ const Home = () => {
                     onMouseLeave={() => setIsAutoPlaying(true)}
                   >
                     {currentItems.map((item, index) => (
-                      <div
+                      <LegoCard
                         key={startIndex + index}
-                        className="flex-none w-60 bg-white rounded-xl shadow-lg hover:shadow-2xl p-4 transform hover:scale-105 transition-all duration-300 border border-gray-100"
-                      >
-                        <div className="w-full h-48 rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br from-gray-50 to-white relative group">
-                          <img
-                            src={item.imgSrc}
-                            alt={item.title}
-                            title={item.title}
-                            className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                            loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.src =
-                                "https://via.placeholder.com/200x200?text=No+Image";
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </div>
-                        <div className="mt-3">
-                          <h3 className="text-sm font-semibold text-gray-900 truncate mb-1">
-                            {item.title}
-                          </h3>
-                          {item.setNum && (
-                            <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full inline-block">
-                              {activeCategory === "sets"
-                                ? "🏗️ Set #"
-                                : activeCategory === "minifigs"
-                                ? "👤 Fig #"
-                                : "🔧 Part #"}
-                              {item.setNum}
-                            </div>
-                          )}
-                          <div className="mt-2 flex items-center justify-between">
-                            <button className="text-xs bg-black text-white px-3 py-1 rounded-full hover:bg-gray-800 transition-colors">
-                              View Details
-                            </button>
-                            <button className="text-xs text-gray-500 hover:text-red-500 transition-colors">
-                              ❤️
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                        item={item}
+                        activeCategory={activeCategory}
+                        onImageError={handleImageError}
+                        onViewDetails={handleViewDetails}
+                        onFavorite={handleFavorite}
+                      />
                     ))}
                   </div>
                 </div>
@@ -510,54 +483,60 @@ const Home = () => {
       </section>
 
       {/* Community & CTA Section */}
-      <section className="bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="flex-1 text-center lg:text-left">
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                Join Our Amazing
-                <br />
-                <span className="bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent">
-                  Builder Community
-                </span>
-              </h2>
-              <p className="text-xl text-gray-300 mb-4 leading-relaxed">
-                Connect with fellow builders and collectors worldwide. Share
-                builds, trade pieces, and find inspiration for your next
-                masterpiece.
-              </p>
-              <div className="flex items-center gap-4 mb-8">
-                <div className="flex -space-x-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full border-2 border-white"></div>
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full border-2 border-white"></div>
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full border-2 border-white"></div>
-                  <div className="w-10 h-10 bg-gradient-to-br from-red-400 to-red-600 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold">
-                    +5K
-                  </div>
-                </div>
-                <span className="text-gray-300">
-                  Active builders this month
-                </span>
+      <section className="relative mb-16 pt-8 bg-gradient-to-br from-white to-gray-50">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png')] opacity-10"></div>
+        <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-8 relative z-10">
+          <div className="flex-1 text-center lg:text-left">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-gray-900 via-yellow-600 to-gray-900 bg-clip-text text-transparent">
+              Join Our Amazing
+              <br />
+              <span className="text-yellow-600">Builder Community</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-prose mt-6 leading-relaxed">
+              Connect with fellow builders and collectors worldwide. Share
+              builds, trade pieces, and find inspiration for your next
+              masterpiece.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
+              <button className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-4 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
+                🚀 Start Building Today
+              </button>
+              <button className="w-full sm:w-auto text-gray-900 hover:text-yellow-600 font-medium py-4 px-8 border-2 border-gray-900 hover:border-yellow-600 rounded-lg transition-colors duration-200 text-center">
+                💬 Join Community
+              </button>
+            </div>
+
+            {/* Stats */}
+            <div className="flex justify-center lg:justify-start gap-8 mt-8 pt-8 border-t border-gray-200">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">15K+</div>
+                <div className="text-sm text-gray-600">Active Builders</div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className="bg-gradient-to-r from-yellow-400 to-red-500 hover:from-yellow-500 hover:to-red-600 text-black font-bold py-4 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
-                  🚀 Start Building Today
-                </button>
-                <button className="border-2 border-white text-white font-semibold py-4 px-8 rounded-lg hover:bg-white hover:text-black transition-all duration-200">
-                  💬 Join Community
-                </button>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">50K+</div>
+                <div className="text-sm text-gray-600">Shared Builds</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">24/7</div>
+                <div className="text-sm text-gray-600">Community Support</div>
               </div>
             </div>
-            <div className="flex-1 relative">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-red-500/20 rounded-2xl blur-3xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                  <img
-                    src="https://tse2.mm.bing.net/th/id/OIP.317kupd1guYqy0hQRKSkxQHaFP?rs=1&pid=ImgDetMain&o=7&rm=3"
-                    alt="Community showcase"
-                    className="w-full rounded-xl shadow-2xl object-contain"
-                  />
-                </div>
+          </div>
+
+          <div className="flex-1 relative">
+            <div className="relative w-full max-w-lg mx-auto">
+              {/* Floating elements */}
+              <div className="absolute -top-4 -left-4 w-16 h-16 bg-yellow-400 rounded-full animate-bounce delay-1000"></div>
+              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-blue-400 rounded-full animate-bounce delay-500"></div>
+              <div className="absolute top-1/2 -right-8 w-8 h-8 bg-green-400 rounded-full animate-pulse"></div>
+
+              <div className="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-300">
+                <img
+                  src="https://tse2.mm.bing.net/th/id/OIP.317kupd1guYqy0hQRKSkxQHaFP?rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="Community showcase"
+                  className="w-full h-96 object-contain rounded-lg"
+                />
               </div>
             </div>
           </div>
