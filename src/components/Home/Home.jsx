@@ -486,6 +486,22 @@ const Home = () => {
       <section className="relative mb-16 pt-8 bg-gradient-to-br from-white to-gray-50">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png')] opacity-10"></div>
         <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-8 relative z-10">
+                 <div className="flex-1 relative">
+            <div className="relative w-full max-w-lg mx-auto">
+              {/* Floating elements */}
+              <div className="absolute -top-4 -left-4 w-16 h-16 bg-yellow-400 rounded-full animate-bounce delay-1000"></div>
+              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-blue-400 rounded-full animate-bounce delay-500"></div>
+              <div className="absolute top-1/2 -right-8 w-8 h-8 bg-green-400 rounded-full animate-pulse"></div>
+
+              <div className="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-300">
+                <img
+                  src="https://tse2.mm.bing.net/th/id/OIP.317kupd1guYqy0hQRKSkxQHaFP?rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="Community showcase"
+                  className="w-full h-96 object-contain rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
           <div className="flex-1 text-center lg:text-left">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-gray-900 via-yellow-600 to-gray-900 bg-clip-text text-transparent">
               Join Our Amazing
@@ -524,22 +540,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="flex-1 relative">
-            <div className="relative w-full max-w-lg mx-auto">
-              {/* Floating elements */}
-              <div className="absolute -top-4 -left-4 w-16 h-16 bg-yellow-400 rounded-full animate-bounce delay-1000"></div>
-              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-blue-400 rounded-full animate-bounce delay-500"></div>
-              <div className="absolute top-1/2 -right-8 w-8 h-8 bg-green-400 rounded-full animate-pulse"></div>
-
-              <div className="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-300">
-                <img
-                  src="https://tse2.mm.bing.net/th/id/OIP.317kupd1guYqy0hQRKSkxQHaFP?rs=1&pid=ImgDetMain&o=7&rm=3"
-                  alt="Community showcase"
-                  className="w-full h-96 object-contain rounded-lg"
-                />
-              </div>
-            </div>
-          </div>
+   
         </div>
       </section>
 
