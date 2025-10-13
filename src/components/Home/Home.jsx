@@ -14,10 +14,9 @@ const Home = () => {
   const [failedImages, setFailedImages] = useState(new Set()); // Track failed images
 
   useEffect(() => {
-
     const fetchedListItems = async () => {
       try {
-        const data = await galleryService.getLegoLists(activeCategory,1);
+        const data = await galleryService.getLegoLists(activeCategory, 1);
         setSets(data.results || []);
         console.log("Fetched list items:", data.results);
       } catch (error) {
@@ -32,50 +31,52 @@ const Home = () => {
   const normalizeGalleryItems = (items) => {
     if (!items || items.length === 0) return [];
 
-    return items.map((item) => {
-      // For API data - sets
-      if (item.set_img_url) {
-        return {
-          title: item.name || "LEGO Set",
-          imgSrc: item.set_img_url,
-          setNum: item.set_num,
-        };
-      }
-      // For API data - minifigs
-      else if (item.set_img_url || item.name) {
-        return {
-          title: item.name || "LEGO Minifig",
-          imgSrc: item.set_img_url || item.img_url,
-          setNum: item.set_num,
-        };
-      }
-      // For API data - parts
-      else if (item.part) {
-        return {
-          title: item.part.name || "LEGO Part",
-          imgSrc: item.part.part_img_url,
-          setNum: item.part.part_num,
-        };
-      }
-      // For fallback data
-      else {
-        return {
-          title: item.title,
-          imgSrc: item.imgSrc,
-        };
-      }
-    }).filter((item) => {
-      // Filter out items without valid images or that have failed to load
-      return (
-        item.imgSrc && 
-        item.imgSrc.trim() !== '' && 
-        !item.imgSrc.includes('placeholder') &&
-        !item.imgSrc.includes('via.placeholder') &&
-        item.imgSrc !== 'null' &&
-        item.imgSrc !== 'undefined' &&
-        !failedImages.has(item.imgSrc) // Exclude failed images
-      );
-    });
+    return items
+      .map((item) => {
+        // For API data - sets
+        if (item.set_img_url) {
+          return {
+            title: item.name || "LEGO Set",
+            imgSrc: item.set_img_url,
+            setNum: item.set_num,
+          };
+        }
+        // For API data - minifigs
+        else if (item.set_img_url || item.name) {
+          return {
+            title: item.name || "LEGO Minifig",
+            imgSrc: item.set_img_url || item.img_url,
+            setNum: item.set_num,
+          };
+        }
+        // For API data - parts
+        else if (item.part) {
+          return {
+            title: item.part.name || "LEGO Part",
+            imgSrc: item.part.part_img_url,
+            setNum: item.part.part_num,
+          };
+        }
+        // For fallback data
+        else {
+          return {
+            title: item.title,
+            imgSrc: item.imgSrc,
+          };
+        }
+      })
+      .filter((item) => {
+        // Filter out items without valid images or that have failed to load
+        return (
+          item.imgSrc &&
+          item.imgSrc.trim() !== "" &&
+          !item.imgSrc.includes("placeholder") &&
+          !item.imgSrc.includes("via.placeholder") &&
+          item.imgSrc !== "null" &&
+          item.imgSrc !== "undefined" &&
+          !failedImages.has(item.imgSrc) // Exclude failed images
+        );
+      });
   };
 
   const handleCategoryChange = (category) => {
@@ -85,18 +86,18 @@ const Home = () => {
 
   // Function to handle image load errors
   const handleImageError = (imgSrc) => {
-    setFailedImages(prev => new Set([...prev, imgSrc]));
+    setFailedImages((prev) => new Set([...prev, imgSrc]));
   };
 
   // Handle view details click
   const handleViewDetails = (item) => {
-    console.log('View details for:', item);
+    console.log("View details for:", item);
     // Add navigation logic here
   };
 
   // Handle favorite click
   const handleFavorite = (item) => {
-    console.log('Favorite clicked for:', item);
+    console.log("Favorite clicked for:", item);
     // Add favorite logic here
   };
 
@@ -215,7 +216,6 @@ const Home = () => {
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
                 Featured Gallery
               </h2>
-              
             </div>
 
             <div className="flex gap-2 flex-wrap">
@@ -253,7 +253,6 @@ const Home = () => {
             </div>
           </div>
 
-         
           {(() => {
             const itemsWithImages = normalizeGalleryItems(sets);
 
@@ -264,10 +263,7 @@ const Home = () => {
                   <div className="overflow-hidden rounded-xl">
                     <div className="flex gap-6 py-6">
                       {Array.from({ length: itemsPerSlide }, (_, index) => (
-                        <LegoCard
-                          key={`skeleton-${index}`}
-                          isLoading={true}
-                        />
+                        <LegoCard key={`skeleton-${index}`} isLoading={true} />
                       ))}
                     </div>
                   </div>
@@ -283,11 +279,11 @@ const Home = () => {
                     No {activeCategory} available
                   </div>
                   <div className="text-gray-600 text-center max-w-md">
-                    We're working hard to add more {activeCategory} to our collection. 
-                    Check back soon or try a different category!
+                    We're working hard to add more {activeCategory} to our
+                    collection. Check back soon or try a different category!
                   </div>
-                  <button 
-                    onClick={() => handleCategoryChange('sets')} 
+                  <button
+                    onClick={() => handleCategoryChange("sets")}
                     className="mt-4 bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
                   >
                     Browse Sets Instead
@@ -394,6 +390,65 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Community & CTA Section */}
+      <section className="relative mb-16 pt-8 bg-gradient-to-br from-white to-gray-50">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png')] opacity-10"></div>
+        <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-8 relative z-10">
+          <div className="flex-1 relative">
+            <div className="relative w-full max-w-lg mx-auto">
+              {/* Floating elements */}
+              <div className="absolute -top-4 -left-4 w-16 h-16 bg-yellow-400 rounded-full animate-bounce delay-1000"></div>
+              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-blue-400 rounded-full animate-bounce delay-500"></div>
+              <div className="absolute top-1/2 -right-8 w-8 h-8 bg-green-400 rounded-full animate-pulse"></div>
+
+              <div className="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-300">
+                <img
+                  src="https://tse2.mm.bing.net/th/id/OIP.317kupd1guYqy0hQRKSkxQHaFP?rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="Community showcase"
+                  className="w-full h-96 object-contain rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex-1 text-center lg:text-left">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-gray-900 via-yellow-600 to-gray-900 bg-clip-text text-transparent">
+              Join Our Amazing
+              <br />
+              <span className="text-yellow-600">Builder Community</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-prose mt-6 leading-relaxed">
+              Connect with fellow builders and collectors worldwide. Share
+              builds, trade pieces, and find inspiration for your next
+              masterpiece.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
+              <button className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-4 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
+                🚀 Start Building Today
+              </button>
+              <button className="w-full sm:w-auto text-gray-900 hover:text-yellow-600 font-medium py-4 px-8 border-2 border-gray-900 hover:border-yellow-600 rounded-lg transition-colors duration-200 text-center">
+                💬 Join Community
+              </button>
+            </div>
+
+            {/* Stats */}
+            <div className="flex justify-center lg:justify-start gap-8 mt-8 pt-8 border-t border-gray-200">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">15K+</div>
+                <div className="text-sm text-gray-600">Active Builders</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">50K+</div>
+                <div className="text-sm text-gray-600">Shared Builds</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">24/7</div>
+                <div className="text-sm text-gray-600">Community Support</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Features Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
@@ -481,69 +536,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      {/* Community & CTA Section */}
-      <section className="relative mb-16 pt-8 bg-gradient-to-br from-white to-gray-50">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/45-degree-fabric-light.png')] opacity-10"></div>
-        <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-8 relative z-10">
-                 <div className="flex-1 relative">
-            <div className="relative w-full max-w-lg mx-auto">
-              {/* Floating elements */}
-              <div className="absolute -top-4 -left-4 w-16 h-16 bg-yellow-400 rounded-full animate-bounce delay-1000"></div>
-              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-blue-400 rounded-full animate-bounce delay-500"></div>
-              <div className="absolute top-1/2 -right-8 w-8 h-8 bg-green-400 rounded-full animate-pulse"></div>
-
-              <div className="bg-white rounded-2xl shadow-2xl p-6 transform rotate-2 hover:rotate-0 transition-transform duration-300">
-                <img
-                  src="https://tse2.mm.bing.net/th/id/OIP.317kupd1guYqy0hQRKSkxQHaFP?rs=1&pid=ImgDetMain&o=7&rm=3"
-                  alt="Community showcase"
-                  className="w-full h-96 object-contain rounded-lg"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex-1 text-center lg:text-left">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight bg-gradient-to-r from-gray-900 via-yellow-600 to-gray-900 bg-clip-text text-transparent">
-              Join Our Amazing
-              <br />
-              <span className="text-yellow-600">Builder Community</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-prose mt-6 leading-relaxed">
-              Connect with fellow builders and collectors worldwide. Share
-              builds, trade pieces, and find inspiration for your next
-              masterpiece.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
-              <button className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-4 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
-                🚀 Start Building Today
-              </button>
-              <button className="w-full sm:w-auto text-gray-900 hover:text-yellow-600 font-medium py-4 px-8 border-2 border-gray-900 hover:border-yellow-600 rounded-lg transition-colors duration-200 text-center">
-                💬 Join Community
-              </button>
-            </div>
-
-            {/* Stats */}
-            <div className="flex justify-center lg:justify-start gap-8 mt-8 pt-8 border-t border-gray-200">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">15K+</div>
-                <div className="text-sm text-gray-600">Active Builders</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">50K+</div>
-                <div className="text-sm text-gray-600">Shared Builds</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">24/7</div>
-                <div className="text-sm text-gray-600">Community Support</div>
-              </div>
-            </div>
-          </div>
-
-   
-        </div>
-      </section>
-
       {/* Newsletter Section */}
       <section className="bg-gray-100 py-16">
         <div className="container mx-auto px-4 text-center">
