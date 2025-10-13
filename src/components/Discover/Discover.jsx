@@ -94,7 +94,7 @@ const Discover = () => {
               className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden cursor-pointer group"
             >
               {/* Image */}
-              <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+              <div className="h-48  flex items-center justify-center overflow-hidden">
                 <img
                   src={category.image}
                   alt={category.title}
