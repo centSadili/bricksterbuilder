@@ -151,7 +151,7 @@ const UniverseProduct = () => {
                 <img 
                   src={currentUniverse.logo} 
                   alt={currentUniverse.name}
-                  className="h-20 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               </div>
             </div>
@@ -166,7 +166,7 @@ const UniverseProduct = () => {
             </div>
 
             {/* Universe Logo (Mobile) */}
-            <div className="lg:hidden flex justify-center">
+            <div>
               <div className={`${currentUniverse.backgroundColor} rounded-lg p-3`}>
                 <img 
                   src={currentUniverse.logo} 
