@@ -9,15 +9,26 @@ const Trending = () => {
   const [error, setError] = useState(null);
   const [failedImages, setFailedImages] = useState(new Set()); // Track failed images
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar toggle
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+
+  // Function to handle page changes with scroll to top
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   useEffect(() => {
-   
     const fetchSets = async () => {
       setLoading(true);
       setError(null);
       try {
-        const results = await galleryService.getLegoLists("sets",6);
-        setSets(results || []);
+        const results = await galleryService.getLegoLists("sets", currentPage);
+        setSets(results.results || []);
+        setTotalCount(results.count || 0);
+        // Calculate total pages (assuming API returns count)
+        setTotalPages(Math.ceil((results.count || 0) / (results.results?.length || 20)));
       } catch (err) {
         setError(err.message);
       } finally {
@@ -26,7 +37,7 @@ const Trending = () => {
     };
 
     fetchSets();
-  }, []);
+  }, [currentPage]);
 
   const normalizeGalleryItems = (items) => {
     return galleryService.normalizeGalleryItems(items, failedImages);
@@ -187,7 +198,7 @@ const Trending = () => {
           {/* Products Grid */}
           {!loading && !error && (
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {normalizeGalleryItems(sets.results || sets).map((item, index) => (
+              {normalizeGalleryItems(sets).map((item, index) => (
                 <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
                   <div className="w-full h-32 flex items-center justify-center mb-3 bg-gray-50 rounded">
                     <img
@@ -212,7 +223,7 @@ const Trending = () => {
           )}
 
           {/* Empty State */}
-          {!loading && !error && normalizeGalleryItems(sets.results || sets).length === 0 && (
+          {!loading && !error && normalizeGalleryItems(sets).length === 0 && (
             <div className="text-center py-16">
               <div className="text-6xl mb-4">📦</div>
               <div className="text-xl font-semibold text-gray-900 mb-2">No trending sets available</div>
@@ -221,16 +232,106 @@ const Trending = () => {
           )}
 
           {/* Pagination */}
-          <div className="flex justify-center mt-8 space-x-2">
-            <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">‹</button>
-            <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded">1</button>
-            <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">2</button>
-            <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">3</button>
-            <span className="px-3 py-1 text-sm text-gray-500">...</span>
-            <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">67</button>
-            <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700">69</button>
-            <button className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 ml-2">Next ›</button>
-          </div>
+          {totalPages > 1 && (
+            <div className="flex justify-center mt-8 space-x-1">
+              {/* Previous Button */}
+              <button 
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 text-sm rounded ${
+                  currentPage === 1 
+                    ? 'text-gray-400 cursor-not-allowed' 
+                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                }`}
+              >
+                ‹ Prev
+              </button>
+
+              {/* Page Numbers */}
+              {(() => {
+                const pages = [];
+                const maxVisiblePages = 7;
+                let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+                
+                // Adjust start page if we're near the end
+                if (endPage - startPage + 1 < maxVisiblePages) {
+                  startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                }
+
+                // Always show first page
+                if (startPage > 1) {
+                  pages.push(
+                    <button 
+                      key={1}
+                      onClick={() => handlePageChange(1)}
+                      className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
+                    >
+                      1
+                    </button>
+                  );
+                  if (startPage > 2) {
+                    pages.push(<span key="start-ellipsis" className="px-2 py-1 text-sm text-gray-400">...</span>);
+                  }
+                }
+
+                // Show page numbers in range
+                for (let i = startPage; i <= endPage; i++) {
+                  pages.push(
+                    <button 
+                      key={i}
+                      onClick={() => handlePageChange(i)}
+                      className={`px-3 py-1 text-sm rounded ${
+                        i === currentPage 
+                          ? 'bg-blue-600 text-white' 
+                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                      }`}
+                    >
+                      {i}
+                    </button>
+                  );
+                }
+
+                // Always show last page
+                if (endPage < totalPages) {
+                  if (endPage < totalPages - 1) {
+                    pages.push(<span key="end-ellipsis" className="px-2 py-1 text-sm text-gray-400">...</span>);
+                  }
+                  pages.push(
+                    <button 
+                      key={totalPages}
+                      onClick={() => handlePageChange(totalPages)}
+                      className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
+                    >
+                      {totalPages}
+                    </button>
+                  );
+                }
+
+                return pages;
+              })()}
+
+              {/* Next Button */}
+              <button 
+                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 text-sm rounded ${
+                  currentPage === totalPages 
+                    ? 'text-gray-400 cursor-not-allowed' 
+                    : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                }`}
+              >
+                Next ›
+              </button>
+            </div>
+          )}
+
+          {/* Page Info */}
+          {totalCount > 0 && (
+            <div className="text-center mt-4 text-sm text-gray-600">
+              Showing page {currentPage} of {totalPages} ({totalCount} total sets)
+            </div>
+          )}
         </div>
       </div>
     </PageView>
