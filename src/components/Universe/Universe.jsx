@@ -13,9 +13,10 @@ import starwarsLogoImage from '../../assets/logo/starwarslogo.png';
 import ninjagoLogoImage from '../../assets/logo/ninjagologo.png';
 import disneyLogoImage from '../../assets/logo/disneylogo.png';
 import legoMovieLogoImage from '../../assets/logo/legomovielogo.png';
+import { useNavigate } from "react-router-dom";
 const Universe = () => {
   const [selectedUniverse, setSelectedUniverse] = useState(null);
-
+  const navigate = useNavigate();
   // LEGO Universe themes data
   const universes = [
     {
@@ -76,6 +77,8 @@ const Universe = () => {
 
   const handleUniverseClick = (universe) => {
     setSelectedUniverse(universe);
+    navigate(`/universe/${universe.id}`);
+    
     // Here you could navigate to a detailed universe page
     console.log('Selected universe:', universe.name);
   };
@@ -199,7 +202,7 @@ const Universe = () => {
           </div>
 
           {/* Selected Universe Modal/Info (optional) */}
-          {selectedUniverse && (
+          {/* {selectedUniverse && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-xl p-6 max-w-md w-full">
                 <div className="flex justify-between items-center mb-4">
@@ -222,7 +225,7 @@ const Universe = () => {
                 </button>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </PageView>
