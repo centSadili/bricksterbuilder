@@ -5,6 +5,7 @@ import Home from "./components/Home/Home";
 import Trending from "./components/Trending/Trending";
 import Universe from "./components/Universe/Universe";
 import UniverseProduct from "./components/UniverseProduct/UniverseProduct";
+import Product from "./components/Product/Product";
 function App() {
   return (
     <Router>
@@ -15,6 +16,8 @@ function App() {
 
         <Route path="/universe" element={<Universe />} />
         <Route path="/universe/:universe" element={<UniverseProduct />} />
+
+        <Route path="/product/:productId/:themeId" element={<Product />} />
       </Routes>
      
     </Router>

@@ -165,8 +165,8 @@ const UniverseProduct = () => {
               />
             </div>
 
-            {/* Universe Logo (Mobile) */}
-            <div>
+            {/* Universe Logo (Mobile Only) */}
+            <div className="lg:hidden">
               <div className={`${currentUniverse.backgroundColor} rounded-lg p-3`}>
                 <img 
                   src={currentUniverse.logo} 
@@ -175,6 +175,7 @@ const UniverseProduct = () => {
                 />
               </div>
             </div>
+
           </div>
         </div>
 
