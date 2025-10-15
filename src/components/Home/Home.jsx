@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PageView from "../Common/PageView/PageView";
 import LegoCard from "../Common/Cards/LegoCard";
 import * as galleryService from "../../services/galleryService";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [sets, setSets] = useState([]);
   const [loadingSets, setLoadingSets] = useState(false);
   const [setsError, setSetsError] = useState(null);
@@ -45,7 +47,12 @@ const Home = () => {
   // Handle view details click
   const handleViewDetails = (item) => {
     console.log("View details for:", item);
-    // Add navigation logic here
+    // Navigate to product page with productId and themeId
+    const productId = item.setNum || item.set_num;
+    const themeId = item.themeId || 'unknown';
+    if (productId) {
+      navigate(`/product/${productId}/${themeId}`);
+    }
   };
 
   // Handle favorite click

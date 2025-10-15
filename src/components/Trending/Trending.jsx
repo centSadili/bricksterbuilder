@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import * as galleryService from "../../services/galleryService";
 import PageView from '../Common/PageView/PageView';
 import LegoCard from '../Common/Cards/LegoCard';
 
 const Trending = () => {
+  const navigate = useNavigate();
   const [sets, setSets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -51,7 +53,12 @@ const Trending = () => {
   // Handle view details click
   const handleViewDetails = (item) => {
     console.log('View details for:', item);
-    // Add navigation logic here
+    // Navigate to product page with productId and themeId
+    const productId = item.setNum || item.set_num;
+    const themeId = item.themeId || 'unknown';
+    if (productId) {
+      navigate(`/product/${productId}/${themeId}`);
+    }
   };
 
   // Handle favorite click
@@ -199,7 +206,11 @@ const Trending = () => {
           {!loading && !error && (
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {normalizeGalleryItems(sets).map((item, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+                <div 
+                  key={index} 
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => handleViewDetails(item)}
+                >
                   <div className="w-full h-32 flex items-center justify-center mb-3 bg-gray-50 rounded">
                     <img
                       src={item.imgSrc}

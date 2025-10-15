@@ -12,6 +12,7 @@ const normalizeGalleryItems = (items, failedImages = new Set()) => {
           title: item.name || "LEGO Set",
           imgSrc: item.set_img_url,
           setNum: item.set_num,
+          themeId: item.theme_id,
         };
       }
       // For API data - minifigs

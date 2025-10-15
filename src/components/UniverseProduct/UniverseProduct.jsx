@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import * as galleryService from "../../services/galleryService";
 import PageView from "../Common/PageView/PageView";
 import marvelImage from '../../assets/marvel.png';
@@ -17,6 +17,7 @@ import disneyLogoImage from '../../assets/logo/disneylogo.png';
 import legoMovieLogoImage from '../../assets/logo/legomovielogo.png';
 const UniverseProduct = () => {
   const { universe } = useParams();
+  const navigate = useNavigate();
   const [sets, setSets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -122,7 +123,12 @@ const UniverseProduct = () => {
   // Handle view details click
   const handleViewDetails = (item) => {
     console.log("View details for:", item);
-    // Add navigation logic here
+    // Navigate to product page with productId and themeId
+    const productId = item.setNum || item.set_num;
+    const themeId = item.themeId || universe || 'unknown';
+    if (productId) {
+      navigate(`/product/${productId}/${themeId}`);
+    }
   };
 
   // Handle favorite click
