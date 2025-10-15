@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PageView from "../Common/PageView/PageView";
 import * as galleryService from "../../services/galleryService";
 const Product = () => {
   const { productId } = useParams();
   const { themeId } = useParams();
+   const navigate = useNavigate();
   const [sets, setSets] = useState([]);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -77,6 +78,11 @@ const Product = () => {
   const handleViewDetails = (item) => {
     console.log("View details for:", item);
     // Add navigation logic here
+    const productId = item.setNum || item.set_num;
+    const themeId = item.themeId || universe || 'unknown';
+    if (productId) {
+      navigate(`/product/${productId}/${themeId}`);
+    }
   };
 
   // Handle favorite click
