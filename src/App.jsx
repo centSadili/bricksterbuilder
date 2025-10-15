@@ -6,6 +6,7 @@ import Trending from "./components/Trending/Trending";
 import Universe from "./components/Universe/Universe";
 import UniverseProduct from "./components/UniverseProduct/UniverseProduct";
 import Product from "./components/Product/Product";
+import Contact from "./components/Contact/Contact";
 function App() {
   return (
     <Router>
@@ -18,6 +19,8 @@ function App() {
         <Route path="/universe/:universe" element={<UniverseProduct />} />
 
         <Route path="/product/:productId/:themeId" element={<Product />} />
+
+        <Route path="/contact" element={<Contact />} />
       </Routes>
      
     </Router>
