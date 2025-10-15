@@ -5,7 +5,7 @@ import * as galleryService from "../../services/galleryService";
 const Product = () => {
   const { productId } = useParams();
   const { themeId } = useParams();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [sets, setSets] = useState([]);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,11 @@ const Product = () => {
         }
 
         // Fetch related sets
-        const results = await galleryService.getLegoLists("sets", currentPage, themeId);
+        const results = await galleryService.getLegoLists(
+          "sets",
+          currentPage,
+          themeId
+        );
         console.log("Sets data:", results);
 
         setSets(results.results || []);
@@ -79,7 +83,7 @@ const Product = () => {
     console.log("View details for:", item);
     // Add navigation logic here
     const productId = item.setNum || item.set_num;
-    const themeId = item.themeId || universe || 'unknown';
+    const themeId = item.themeId || universe || "unknown";
     if (productId) {
       navigate(`/product/${productId}/${themeId}`);
     }
@@ -247,7 +251,7 @@ const Product = () => {
                     </div>
 
                     <div className="space-y-3">
-                       <p className="text-gray-700 leading-relaxed">
+                      <p className="text-gray-700 leading-relaxed">
                         Lorem ipsum dolor sit amet, consectetur adipisicing
                         elit. Dignissimos vitae dolores cum repellat magnam ad
                         placeat provident commodi exercitationem odio. Nemo
@@ -287,14 +291,9 @@ const Product = () => {
                     </div>
 
                     <div className="pt-4 space-y-3">
-                     
-
                       <div className="flex space-x-3 pt-4">
-                        <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
-                          Add to Wishlist
-                        </button>
-                        <button className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors">
-                          Share
+                        <button className="w-full sm:w-auto bg-black hover:bg-gray-900 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
+                          Go to Shop
                         </button>
                       </div>
                     </div>
@@ -344,7 +343,6 @@ const Product = () => {
             {/* Loading State */}
             {loading && (
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                
                 {Array.from({ length: 16 }, (_, index) => (
                   <div
                     key={`skeleton-${index}`}
@@ -378,7 +376,6 @@ const Product = () => {
             <h1>recommendation</h1>
             {!loading && !error && (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                
                 {normalizeGalleryItems(sets).map((item, index) => (
                   <div
                     key={index}

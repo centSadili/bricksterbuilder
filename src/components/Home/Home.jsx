@@ -116,14 +116,8 @@ const Home = () => {
 
             <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
               <button className="w-full sm:w-auto bg-black hover:bg-gray-900 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
-                🛒 Shop Now
+                Shop Now
               </button>
-              <a
-                href="#gallery"
-                className="w-full sm:w-auto text-black hover:text-red-600 font-medium py-4 px-8 border-2 border-black hover:border-red-600 rounded-lg transition-colors duration-200 text-center"
-              >
-                🖼️ Browse Gallery
-              </a>
             </div>
 
             {/* Stats */}
@@ -383,11 +377,8 @@ const Home = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
-              <button className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-4 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
-                🚀 Start Building Today
-              </button>
-              <button className="w-full sm:w-auto text-gray-900 hover:text-yellow-600 font-medium py-4 px-8 border-2 border-gray-900 hover:border-yellow-600 rounded-lg transition-colors duration-200 text-center">
-                💬 Join Community
+              <button className="w-full sm:w-auto bg-black hover:bg-gray-900 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
+                Shop Now
               </button>
             </div>
 
