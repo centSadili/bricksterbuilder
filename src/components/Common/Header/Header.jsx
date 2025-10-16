@@ -100,44 +100,35 @@ export default function Header() {
           <ul className="flex flex-col p-6 space-y-1">
             <li>
               <a href="/" className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-medium">
-                🏠 Home
+                Home
               </a>
             </li>
             <li>
               <a href="/discover" className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-medium">
-                🔍 Discover
+                Discover
               </a>
             </li>
             <li>
               <a href="/trending" className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-medium">
-                🔥 Trending
+                Trending
               </a>
             </li>
             <li>
               <a href="/universe" className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-medium">
-                🌌 Universe
+                Universe
               </a>
             </li>
             <li>
               <a href="/contact" className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-medium">
-                📧 Contact
+                Contact
               </a>
             </li>
             <li>
               <a href="/help" className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-medium">
-                ❓ Help
+                Help
               </a>
             </li>
-            <li className="pt-4 border-t border-gray-200/50 mt-4">
-              <button className="w-full bg-black hover:bg-gray-900 text-white font-semibold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 group">
-                <a href="/" className="flex items-center justify-center space-x-2 text-white">
-                  <span>🛒 Shop Now!</span>
-                  <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                  </svg>
-                </a>
-              </button>
-            </li>
+            
           </ul>
         </nav>
       </div>
