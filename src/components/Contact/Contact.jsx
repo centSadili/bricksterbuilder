@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PageView from "../Common/PageView/PageView";
 import legoMovieImage from "../../assets/legomovie.png";
+import sendEmail from "../../services/emailService";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -25,15 +26,31 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // Prepare data for EmailJS template
+      const emailData = {
+        from_name: `${formData.name} ${formData.surname}`,
+        from_email: formData.email,
+        message: formData.message,
+        to_name: 'Brickster Builder Team'
+      };
+
+      await sendEmail(emailData);
+      
       setSubmitStatus('success');
       setFormData({ name: '', surname: '', email: '', message: '' });
       
       // Clear success message after 3 seconds
       setTimeout(() => setSubmitStatus(''), 3000);
-    }, 1000);
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      setSubmitStatus('error');
+      
+      // Clear error message after 3 seconds
+      setTimeout(() => setSubmitStatus(''), 3000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -94,6 +111,18 @@ const Contact = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                   <span className="text-green-700 font-medium">Message sent successfully!</span>
+                </div>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {submitStatus === 'error' && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <span className="text-red-700 font-medium">Failed to send message. Please try again.</span>
                 </div>
               </div>
             )}
