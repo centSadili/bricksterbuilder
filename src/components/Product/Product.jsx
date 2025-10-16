@@ -372,8 +372,18 @@ const Product = () => {
                 </button>
               </div>
             )}
+            
+            {/* Recommended Section Header */}
+            <div className="mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">
+                Recommended for You
+              </h2>
+              <p className="text-gray-600 text-sm md:text-base">
+                Discover more amazing LEGO sets you might like
+              </p>
+            </div>
+
             {/* Products Grid */}
-            <h1>recommendation</h1>
             {!loading && !error && (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {normalizeGalleryItems(sets).map((item, index) => (
