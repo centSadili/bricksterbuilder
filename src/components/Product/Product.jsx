@@ -252,11 +252,16 @@ const Product = () => {
 
                     <div className="space-y-3">
                       <p className="text-gray-700 leading-relaxed">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit. Dignissimos vitae dolores cum repellat magnam ad
-                        placeat provident commodi exercitationem odio. Nemo
-                        temporibus maiores esse aliquid dolor illo amet quo
-                        expedita.{" "}
+                        {product.num_parts ? (
+                          `This amazing LEGO set features ${product.num_parts} pieces of building fun! `
+                        ) : (
+                          "This incredible LEGO set brings endless building possibilities! "
+                        )}
+                        {product.year && `Released in ${product.year}, `}
+                        {product.theme_id && `this ${product.theme_id} themed set `}
+                        offers hours of creative building and imaginative play. Perfect for builders of all ages, 
+                        this set combines quality LEGO craftsmanship with innovative design to create an 
+                        unforgettable building experience that will spark creativity and provide lasting enjoyment.
                       </p>
                       <div className="flex items-center space-x-4">
                         <span className="text-sm font-medium text-gray-500">
